@@ -23,9 +23,8 @@ const handleRegister = async () => {
     password: userCredential.password,
   });
 
-  if (response) router.push({ name: "events" });
-
-  return false;
+  if (response) return router.push({ name: "events" });
+  else return false;
 };
 </script>
 

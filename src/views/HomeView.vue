@@ -22,7 +22,7 @@
       </router-link>
       <span class="font-bold text-gray-700 text-md">Or</span>
       <router-link
-        :to="{ name: 'register' }"
+        :to="{ name: 'login' }"
         class="px-5 py-3 font-semibold text-sm rounded-md shadow-sm bg-slate-600 hover:bg-slate-700 text-white transition-all"
       >
         Login

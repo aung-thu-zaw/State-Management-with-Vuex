@@ -12,9 +12,8 @@ const user = useCurrentUser();
 const handleLogout = async () => {
   const response = await store.dispatch("signOutOfFirebase");
 
-  if (response) return router.push({ name: "login" });
-
-  return false;
+  if (response) return router.push({ name: "home" });
+  else return false;
 };
 </script>
 

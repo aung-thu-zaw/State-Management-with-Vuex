@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../firebase/config.js";
 
 export default {
@@ -34,6 +34,17 @@ export default {
           return response.user;
         }
       } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
+    async signOutOfFirebase({ commit }) {
+      try {
+        await signOut(auth);
+
+        return true;
+      } catch (error) {
+        
         commit("SET_AUTH_ERROR_MESSAGE", error.message);
       }
     },

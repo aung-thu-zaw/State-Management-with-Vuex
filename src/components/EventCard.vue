@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border border-slate-300 p-5 rounded-sm cursor-pointer hover:shadow-md hover:bg-gray-50 transition-all"
+    class="bg-white border border-slate-300 p-5 rounded-sm cursor-pointer hover:shadow-md hover:bg-gray-50 transition-all"
   >
     <p class="text-xs font-medium text-center text-gray-500">
       @12:00 Pm on January 28, 2023

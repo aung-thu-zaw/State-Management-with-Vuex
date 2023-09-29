@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
   <section class="bg-gray-50 dark:bg-gray-900">
     <div
@@ -86,10 +89,6 @@
     </div>
   </section>
 </template>
-  
-  <script>
-export default {};
-</script>
   
   <style>
 </style>

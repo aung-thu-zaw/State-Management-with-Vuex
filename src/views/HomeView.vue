@@ -16,13 +16,14 @@
     <div class="flex items-center space-x-5">
       <router-link
         :to="{ name: 'register' }"
-        class="px-5 py-3 font-semibold text-sm border-[2px] border-blue-600 text-blue-600 rounded-md shadow-sm hover:bg-blue-600 hover:text-white transition-all"
+        class="px-5 py-3 font-semibold text-sm rounded-md shadow-sm bg-blue-600 hover:bg-blue-700 text-white transition-all"
       >
         Register
       </router-link>
+      <span class="font-bold text-gray-700 text-md">Or</span>
       <router-link
         :to="{ name: 'register' }"
-        class="px-5 py-3 font-semibold text-sm border-[2px] border-slate-600 text-slate-600 rounded-md shadow-sm hover:bg-slate-600 hover:text-white transition-all"
+        class="px-5 py-3 font-semibold text-sm rounded-md shadow-sm bg-slate-600 hover:bg-slate-700 text-white transition-all"
       >
         Login
       </router-link>

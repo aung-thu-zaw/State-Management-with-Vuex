@@ -1,13 +1,16 @@
 import { initializeApp } from "firebase/app";
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_API_KEY,
-  projectId: import.meta.env.VITE_FIREBASE_API_KEY,
-  storageBucket: import.meta.env.VITE_FIREBASE_API_KEY,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_API_KEY,
-  appId: import.meta.env.VITE_FIREBASE_API_KEY,
-};
+import { useFirebaseAuth } from "vuefire";
 
 // Initialize Firebase
-export const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp({
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+});
+
+const auth = useFirebaseAuth();
+
+export { firebaseApp, auth };

@@ -1,3 +1,34 @@
+<script setup>
+import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
+import { useRouter } from "vue-router";
+import { computed, reactive } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+const router = useRouter();
+const userCredential = reactive({
+  username: null,
+  email: null,
+  password: null,
+});
+
+const createUserErrorMessage = computed(
+  () => store.state.authentication.authErrorMessage
+);
+
+const handleRegister = async () => {
+  const response = await store.dispatch("createUser", {
+    username: userCredential.username,
+    email: userCredential.email,
+    password: userCredential.password,
+  });
+
+  if (response) router.push({ name: "events" });
+
+  return false;
+};
+</script>
+
 <template>
   <section class="bg-gray-50 dark:bg-gray-900">
     <div
@@ -12,7 +43,14 @@
           >
             Create an account
           </h1>
-          <form class="space-y-4 md:space-y-6" action="#">
+
+          <ErrorMessageCard :message="createUserErrorMessage" />
+
+          <form
+            @submit.prevent="handleRegister"
+            class="space-y-4 md:space-y-6"
+            action="#"
+          >
             <div>
               <label
                 for="name"
@@ -27,6 +65,7 @@
                 id="name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter your full name"
+                v-model="userCredential.username"
               />
             </div>
             <div>
@@ -43,8 +82,10 @@
                 id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="example@gmail.com"
+                v-model="userCredential.email"
               />
             </div>
+
             <div>
               <label
                 for="password"
@@ -59,6 +100,7 @@
                 id="password"
                 placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                v-model="userCredential.password"
               />
             </div>
             <div>
@@ -99,10 +141,6 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {};
-</script>
 
 <style>
 </style>

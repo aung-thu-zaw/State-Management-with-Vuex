@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../../firebase/config.js";
 
 export default {
@@ -18,7 +22,7 @@ export default {
   },
 
   actions: {
-    async createUser({ commit }, { username, email, password }) {
+    async createUser({ commit, dispatch }, { username, email, password }) {
       try {
         if (email && password) {
           const response = await createUserWithEmailAndPassword(
@@ -31,7 +35,7 @@ export default {
             throw new Error("User creation failed: User object not available.");
 
           commit("SET_USER", response.user);
-          return response.user;
+          return dispatch("updateProfileForCurrentUser", username);
         }
       } catch (error) {
         commit("SET_AUTH_ERROR_MESSAGE", error.message);
@@ -44,10 +48,27 @@ export default {
 
         return true;
       } catch (error) {
-        
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
+    async updateProfileForCurrentUser({ commit, state }, displayName) {
+      try {
+        const currentUser = state.user;
+
+        await updateProfile(currentUser, {
+          displayName,
+          photoURL: "https://example.com/jane-q-user/profile.jpg",
+        });
+
+        commit("SET_USER", { ...currentUser, displayName });
+
+        return currentUser;
+      } catch (error) {
         commit("SET_AUTH_ERROR_MESSAGE", error.message);
       }
     },
   },
+
   modules: {},
 };

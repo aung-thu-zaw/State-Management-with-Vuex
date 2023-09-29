@@ -36,7 +36,7 @@ const handleLogout = async () => {
         Logout
       </button>
     </nav>
-    {{ user }}
+
     <div class="my-10 space-y-3">
       <h1 class="text-lg font-semibold text-yellow-400 w-full text-center">
         Hello 👋, {{ user?.displayName }}!

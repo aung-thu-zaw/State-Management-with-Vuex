@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -36,6 +37,26 @@ export default {
 
           commit("SET_USER", response.user);
           return dispatch("updateProfileForCurrentUser", username);
+        }
+      } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
+    async signInUser({ commit }, { email, password }) {
+      try {
+        if (email && password) {
+          const response = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          if (!response.user)
+            throw new Error("User login failed: Something went wrong!.");
+
+          commit("SET_USER", response.user);
+          return response.user;
         }
       } catch (error) {
         commit("SET_AUTH_ERROR_MESSAGE", error.message);

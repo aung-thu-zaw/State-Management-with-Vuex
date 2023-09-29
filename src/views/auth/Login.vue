@@ -1,4 +1,29 @@
 <script setup>
+import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
+import { computed, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+
+const store = useStore();
+const router = useRouter();
+const userCredential = reactive({
+  email: null,
+  password: null,
+});
+
+const loginErrorMessage = computed(
+  () => store.state.authentication.authErrorMessage
+);
+
+const handleLogin = async () => {
+  const response = await store.dispatch("signInUser", {
+    email: userCredential.email,
+    password: userCredential.password,
+  });
+
+  if (response) return router.push({ name: "events" });
+  else return false;
+};
 </script>
 
 <template>
@@ -15,7 +40,14 @@
           >
             Sign in to your account
           </h1>
-          <form class="space-y-4 md:space-y-6" action="#">
+
+          <ErrorMessageCard :message="loginErrorMessage" />
+
+          <form
+            @submit.prevent="handleLogin"
+            class="space-y-4 md:space-y-6"
+            action="#"
+          >
             <div>
               <label
                 for="email"
@@ -29,6 +61,7 @@
                 id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="example@gmail.com"
+                v-model="userCredential.email"
               />
             </div>
             <div>
@@ -44,6 +77,7 @@
                 id="password"
                 placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                v-model="userCredential.password"
               />
             </div>
             <div class="flex items-center justify-between">
@@ -54,7 +88,6 @@
                     aria-describedby="remember"
                     type="checkbox"
                     class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                    required=""
                   />
                 </div>
                 <div class="ml-3 text-sm">
@@ -80,8 +113,9 @@
               <router-link
                 :to="{ name: 'register' }"
                 class="text-blue-600 hover:underline dark:text-blue-500 font-bold"
-                >Register here</router-link
               >
+                Register here
+              </router-link>
             </p>
           </form>
         </div>
@@ -90,5 +124,5 @@
   </section>
 </template>
   
-  <style>
+<style>
 </style>

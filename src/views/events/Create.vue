@@ -1,14 +1,11 @@
+<script setup>
+import Navbar from "@/components/Navbar.vue";
+
+</script>
+
 <template>
   <div class="container mx-auto min-h-screen p-10">
-    <nav class="flex items-center justify-center space-x-5 mb-12">
-      <router-link :to="{ name: 'events' }" class="font-semibold text-md">
-        Events
-      </router-link>
-      <span>|</span>
-      <router-link :to="{ name: 'add-event' }" class="font-semibold text-md">
-        Create
-      </router-link>
-    </nav>
+    <Navbar />
 
     <!-- Event Create From -->
     <div class="border shadow w-1/2 mx-auto p-6 rounded-md">
@@ -152,10 +149,7 @@
     </div>
   </div>
 </template>
-  
-  <script>
-export default {};
-</script>
+
   
 <style scoped>
 a.router-link-active {

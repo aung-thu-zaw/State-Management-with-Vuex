@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import Register from "@/views/auth/Register.vue";
 import Login from "@/views/auth/Login.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
+import MyAccount from "@/views/MyAccount.vue";
 import Index from "@/views/events/Index.vue";
 import Create from "@/views/events/Create.vue";
 import Edit from "@/views/events/Edit.vue";
@@ -53,6 +54,17 @@ const router = createRouter({
 
         if (!user) next();
         else next({ name: "events" });
+      },
+    },
+    {
+      path: "/my-account",
+      name: "my-account",
+      component: MyAccount,
+      async beforeEnter(to, from, next) {
+        const user = await getCurrentUser();
+
+        if (!user) next({ name: "login" });
+        else next();
       },
     },
     {

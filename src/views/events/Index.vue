@@ -2,13 +2,12 @@
 import SuccessMessageCard from "@/components/Cards/SuccessMessageCard.vue";
 import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
 import EventCard from "@/components/Cards/EventCard.vue";
+import Navbar from "@/components/Navbar.vue";
 import { useStore } from "vuex";
 import { useCurrentUser } from "vuefire";
-import { useRouter } from "vue-router";
 import { computed } from "vue";
 
 const store = useStore();
-const router = useRouter();
 
 const user = useCurrentUser();
 
@@ -21,36 +20,13 @@ const verifyEmailAlertMessage = computed(() =>
 const errorMessage = computed(
   () => store.state.authentication.authErrorMessage
 );
-
-const handleLogout = async () => {
-  const response = await store.dispatch("signOutOfFirebase");
-
-  if (response) return router.push({ name: "home" });
-  else return false;
-};
 </script>
 
 <template>
   <SuccessMessageCard :message="verifyEmailAlertMessage" />
   <ErrorMessageCard :message="errorMessage" />
   <div class="container mx-auto min-h-screen p-10">
-    <nav class="flex items-center justify-center space-x-5">
-      <router-link :to="{ name: 'events' }" class="font-semibold text-md">
-        Events
-      </router-link>
-      <span>|</span>
-      <router-link :to="{ name: 'add-event' }" class="font-semibold text-md">
-        My Account
-      </router-link>
-      <span>|</span>
-      <button
-        type="button"
-        @click="handleLogout"
-        class="font-semibold text-md hover:text-blue-700"
-      >
-        Logout
-      </button>
-    </nav>
+    <Navbar />
 
     <div class="my-10 space-y-3">
       <h1 class="text-lg font-semibold text-yellow-400 w-full text-center">

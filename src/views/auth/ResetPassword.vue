@@ -1,6 +1,6 @@
 <script setup>
-import SuccessMessageCard from "@/components/SuccessMessageCard.vue";
-import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
+import SuccessMessageCard from "@/components/Cards/SuccessMessageCard.vue";
+import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 

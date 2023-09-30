@@ -30,9 +30,12 @@ export default {
   },
 
   actions: {
-    async createUser({ commit, dispatch }, { username, email, password }) {
+    async createUser(
+      { commit, dispatch },
+      { username, email, password, confirmPassword }
+    ) {
       try {
-        if (email && password) {
+        if (email && password && password === confirmPassword) {
           const response = await createUserWithEmailAndPassword(
             auth,
             email,

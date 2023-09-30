@@ -1,5 +1,9 @@
 <script setup>
-import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
+import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
+import InputField from "@/components/Forms/InputField.vue";
+import InputLabel from "@/components/Forms/InputLabel.vue";
+import InputError from "@/components/Forms/InputError.vue";
+import FormButton from "@/components/Forms/FormButton.vue";
 import { useRouter } from "vue-router";
 import { computed, reactive } from "vue";
 import { useStore } from "vuex";
@@ -10,6 +14,7 @@ const userCredential = reactive({
   username: null,
   email: null,
   password: null,
+  confirmPassword: null,
 });
 
 const createUserErrorMessage = computed(
@@ -21,6 +26,7 @@ const handleRegister = async () => {
     username: userCredential.username,
     email: userCredential.email,
     password: userCredential.password,
+    confirmPassword: userCredential.confirmPassword,
   });
 
   if (response) return router.push({ name: "events" });
@@ -45,86 +51,61 @@ const handleRegister = async () => {
 
           <ErrorMessageCard :message="createUserErrorMessage" />
 
-          <form
-            @submit.prevent="handleRegister"
-            class="space-y-4 md:space-y-6"
-            action="#"
-          >
+          <form @submit.prevent="handleRegister" class="space-y-4 md:space-y-6">
             <div>
-              <label
-                for="name"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Username
-                <span class="text-red-600">*</span>
-              </label>
-              <input
+              <InputLabel name="Username" :required="true" />
+
+              <InputField
                 type="text"
                 name="name"
-                id="name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter your full name"
                 v-model="userCredential.username"
               />
+
+              <InputError message="error" />
             </div>
+
             <div>
-              <label
-                for="email"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Your email
-                <span class="text-red-600">*</span>
-              </label>
-              <input
+              <InputLabel name="Your email" :required="true" />
+
+              <InputField
                 type="email"
                 name="email"
-                id="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="example@gmail.com"
                 v-model="userCredential.email"
               />
+
+              <InputError message="error" />
             </div>
 
             <div>
-              <label
-                for="password"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Password
-                <span class="text-red-600">*</span>
-              </label>
-              <input
+              <InputLabel name="Password" :required="true" />
+
+              <InputField
                 type="password"
                 name="password"
-                id="password"
                 placeholder="••••••••"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 v-model="userCredential.password"
               />
-            </div>
-            <div>
-              <label
-                for="confirm-password"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Confirm password
-                <span class="text-red-600">*</span>
-              </label>
-              <input
-                type="confirm-password"
-                name="confirm-password"
-                id="confirm-password"
-                placeholder="••••••••"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+
+              <InputError message="error" />
             </div>
 
-            <button
-              type="submit"
-              class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Create an account
-            </button>
+            <div>
+              <InputLabel name="Confirm password" :required="true" />
+
+              <InputField
+                type="password"
+                name="confirm-password"
+                placeholder="••••••••"
+                v-model="userCredential.confirmPassword"
+              />
+
+              <InputError message="error" />
+            </div>
+
+            <FormButton name="Create an account" />
+
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               Already have an account?
               <router-link

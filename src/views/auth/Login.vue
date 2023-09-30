@@ -1,5 +1,9 @@
 <script setup>
-import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
+import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
+import InputField from "@/components/Forms/InputField.vue";
+import InputLabel from "@/components/Forms/InputLabel.vue";
+import InputError from "@/components/Forms/InputError.vue";
+import FormButton from "@/components/Forms/FormButton.vue";
 import { computed, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -43,59 +47,34 @@ const handleLogin = async () => {
 
           <ErrorMessageCard :message="loginErrorMessage" />
 
-          <form
-            @submit.prevent="handleLogin"
-            class="space-y-4 md:space-y-6"
-            action="#"
-          >
+          <form @submit.prevent="handleLogin" class="space-y-4 md:space-y-6">
             <div>
-              <label
-                for="email"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Your email
-                <span class="text-red-600">*</span>
-              </label>
-              <input
+              <InputLabel name="Your email" :required="true" />
+
+              <InputField
                 type="email"
                 name="email"
-                id="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="example@gmail.com"
                 v-model="userCredential.email"
               />
+
+              <InputError message="error" />
             </div>
+
             <div>
-              <label
-                for="password"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Password
-                <span class="text-red-600">*</span>
-              </label>
-              <input
+              <InputLabel name="Password" :required="true" />
+
+              <InputField
                 type="password"
                 name="password"
-                id="password"
                 placeholder="••••••••"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 v-model="userCredential.password"
               />
+
+              <InputError message="error" />
             </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-start">
-                <div class="flex items-center h-5">
-                  <input
-                    id="remember"
-                    aria-describedby="remember"
-                    type="checkbox"
-                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                  />
-                </div>
-                <div class="ml-3 text-sm">
-                  <label for="remember" class="text-gray-500 dark:text-gray-300"
-                    >Remember me</label
-                  >
-                </div>
-              </div>
+
+            <div class="flex items-center">
               <router-link
                 :to="{ name: 'reset-password' }"
                 class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
@@ -103,12 +82,9 @@ const handleLogin = async () => {
                 Forgot password?
               </router-link>
             </div>
-            <button
-              type="submit"
-              class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Sign in
-            </button>
+
+            <FormButton name="Sign In" />
+
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               Don’t have an account yet?
               <router-link

@@ -1,7 +1,7 @@
 <script setup>
-import SuccessMessageCard from "@/components/SuccessMessageCard.vue";
-import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
-import EventCard from "@/components/EventCard.vue";
+import SuccessMessageCard from "@/components/Cards/SuccessMessageCard.vue";
+import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
+import EventCard from "@/components/Cards/EventCard.vue";
 import { useStore } from "vuex";
 import { useCurrentUser } from "vuefire";
 import { useRouter } from "vue-router";

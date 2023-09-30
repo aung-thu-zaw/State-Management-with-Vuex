@@ -5,33 +5,67 @@ import InputLabel from "@/components/Forms/InputLabel.vue";
 import InputError from "@/components/Forms/InputError.vue";
 import FormButton from "@/components/Forms/FormButton.vue";
 import { useRouter } from "vue-router";
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
+import { useForm, useField } from "vee-validate";
+import * as yup from "yup";
 
 const store = useStore();
 const router = useRouter();
-const userCredential = reactive({
-  username: null,
-  email: null,
-  password: null,
-  confirmPassword: null,
-});
 
 const createUserErrorMessage = computed(
   () => store.state.authentication.authErrorMessage
 );
 
+const validationSchema = yup.object({
+  username: yup.string().required(),
+  email: yup.string().required().email(),
+  password: yup.string().required().min(6),
+  confirmPassword: yup
+    .string()
+    .required()
+    .min(6)
+    .oneOf([yup.ref("password"), null], "Passwords do not match"),
+});
+
+const { handleSubmit, setFieldValue, errors } = useForm({
+  validationSchema,
+});
+
+const { value: username } = useField("username");
+const { value: email } = useField("email");
+const { value: password } = useField("password");
+const { value: confirmPassword } = useField("confirmPassword");
+
+const handleChangeUserName = (event) => {
+  setFieldValue("username", event.target.value);
+};
+
+const handleChangeEmail = (event) => {
+  setFieldValue("email", event.target.value);
+};
+
+const handleChangePassword = (event) => {
+  setFieldValue("password", event.target.value);
+};
+
+const handleChangeConfirmPassword = (event) => {
+  setFieldValue("confirmPassword", event.target.value);
+};
+
 const handleRegister = async () => {
   const response = await store.dispatch("createUser", {
-    username: userCredential.username,
-    email: userCredential.email,
-    password: userCredential.password,
-    confirmPassword: userCredential.confirmPassword,
+    username: username.value,
+    email: email.value,
+    password: password.value,
+    confirmPassword: confirmPassword.value,
   });
 
   if (response) return router.push({ name: "events" });
   else return false;
 };
+
+const submit = handleSubmit(() => handleRegister());
 </script>
 
 <template>
@@ -51,7 +85,7 @@ const handleRegister = async () => {
 
           <ErrorMessageCard :message="createUserErrorMessage" />
 
-          <form @submit.prevent="handleRegister" class="space-y-4 md:space-y-6">
+          <form @submit.prevent="submit" class="space-y-4 md:space-y-6">
             <div>
               <InputLabel name="Username" :required="true" />
 
@@ -59,10 +93,11 @@ const handleRegister = async () => {
                 type="text"
                 name="name"
                 placeholder="Enter your full name"
-                v-model="userCredential.username"
+                :modelValue="username"
+                @change="handleChangeUserName"
               />
 
-              <InputError message="error" />
+              <InputError :message="errors?.username" />
             </div>
 
             <div>
@@ -72,10 +107,11 @@ const handleRegister = async () => {
                 type="email"
                 name="email"
                 placeholder="example@gmail.com"
-                v-model="userCredential.email"
+                :modelValue="email"
+                @change="handleChangeEmail"
               />
 
-              <InputError message="error" />
+              <InputError :message="errors?.email" />
             </div>
 
             <div>
@@ -85,10 +121,11 @@ const handleRegister = async () => {
                 type="password"
                 name="password"
                 placeholder="••••••••"
-                v-model="userCredential.password"
+                :modelValue="password"
+                @change="handleChangePassword"
               />
 
-              <InputError message="error" />
+              <InputError :message="errors?.password" />
             </div>
 
             <div>
@@ -98,10 +135,11 @@ const handleRegister = async () => {
                 type="password"
                 name="confirm-password"
                 placeholder="••••••••"
-                v-model="userCredential.confirmPassword"
+                :modelValue="confirmPassword"
+                @change="handleChangeConfirmPassword"
               />
 
-              <InputError message="error" />
+              <InputError :message="errors?.confirmPassword" />
             </div>
 
             <FormButton name="Create an account" />

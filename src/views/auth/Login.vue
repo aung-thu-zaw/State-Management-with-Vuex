@@ -4,30 +4,50 @@ import InputField from "@/components/Forms/InputField.vue";
 import InputLabel from "@/components/Forms/InputLabel.vue";
 import InputError from "@/components/Forms/InputError.vue";
 import FormButton from "@/components/Forms/FormButton.vue";
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { useForm, useField } from "vee-validate";
+import * as yup from "yup";
 
 const store = useStore();
 const router = useRouter();
-const userCredential = reactive({
-  email: null,
-  password: null,
-});
 
 const loginErrorMessage = computed(
   () => store.state.authentication.authErrorMessage
 );
 
+const validationSchema = yup.object({
+  email: yup.string().required().email(),
+  password: yup.string().required().min(6),
+});
+
+const { handleSubmit, setFieldValue, errors } = useForm({
+  validationSchema,
+});
+
+const { value: email } = useField("email");
+const { value: password } = useField("password");
+
+const handleChangeEmail = (event) => {
+  setFieldValue("email", event.target.value);
+};
+
+const handleChangePassword = (event) => {
+  setFieldValue("password", event.target.value);
+};
+
 const handleLogin = async () => {
   const response = await store.dispatch("signInUser", {
-    email: userCredential.email,
-    password: userCredential.password,
+    email: email.value,
+    password: password.value,
   });
 
   if (response) return router.push({ name: "events" });
   else return false;
 };
+
+const submit = handleSubmit(() => handleLogin());
 </script>
 
 <template>
@@ -47,7 +67,7 @@ const handleLogin = async () => {
 
           <ErrorMessageCard :message="loginErrorMessage" />
 
-          <form @submit.prevent="handleLogin" class="space-y-4 md:space-y-6">
+          <form @submit.prevent="submit" class="space-y-4 md:space-y-6">
             <div>
               <InputLabel name="Your email" :required="true" />
 
@@ -55,10 +75,11 @@ const handleLogin = async () => {
                 type="email"
                 name="email"
                 placeholder="example@gmail.com"
-                v-model="userCredential.email"
+                :modelValue="email"
+                @change="handleChangeEmail"
               />
 
-              <InputError message="error" />
+              <InputError :message="errors?.email" />
             </div>
 
             <div>
@@ -68,10 +89,11 @@ const handleLogin = async () => {
                 type="password"
                 name="password"
                 placeholder="••••••••"
-                v-model="userCredential.password"
+                :modelValue="password"
+                @change="handleChangePassword"
               />
 
-              <InputError message="error" />
+              <InputError :message="errors?.password" />
             </div>
 
             <div class="flex items-center">

@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -10,6 +11,7 @@ export default {
   state: {
     user: null,
     authErrorMessage: null,
+    authSuccessMessage: null,
   },
   getters: {},
   mutations: {
@@ -19,6 +21,10 @@ export default {
 
     SET_AUTH_ERROR_MESSAGE(state, errorMessage) {
       state.authErrorMessage = errorMessage;
+    },
+
+    SET_AUTH_SUCCESS_MESSAGE(state, successMessage) {
+      state.authSuccessMessage = successMessage;
     },
   },
 
@@ -85,6 +91,21 @@ export default {
         commit("SET_USER", { ...currentUser, displayName });
 
         return currentUser;
+      } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
+    async resetPassword({ commit }, email) {
+      try {
+        if (email) {
+          await sendPasswordResetEmail(auth, email);
+
+          commit(
+            "SET_AUTH_SUCCESS_MESSAGE",
+            "Password Reset Email has been send. Please check your email inbox or spam."
+          );
+        }
       } catch (error) {
         commit("SET_AUTH_ERROR_MESSAGE", error.message);
       }

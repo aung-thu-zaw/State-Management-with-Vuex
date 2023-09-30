@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import Register from "@/views/auth/Register.vue";
 import Login from "@/views/auth/Login.vue";
+import ResetPassword from "@/views/auth/ResetPassword.vue";
 import Index from "@/views/events/Index.vue";
 import Create from "@/views/events/Create.vue";
 import Edit from "@/views/events/Edit.vue";
@@ -36,6 +37,17 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: Login,
+      async beforeEnter(to, from, next) {
+        const user = await getCurrentUser();
+
+        if (!user) next();
+        else next({ name: "events" });
+      },
+    },
+    {
+      path: "/reset-password",
+      name: "reset-password",
+      component: ResetPassword,
       async beforeEnter(to, from, next) {
         const user = await getCurrentUser();
 

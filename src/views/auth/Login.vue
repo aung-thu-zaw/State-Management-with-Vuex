@@ -96,11 +96,12 @@ const handleLogin = async () => {
                   >
                 </div>
               </div>
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'reset-password' }"
                 class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-                >Forgot password?</a
               >
+                Forgot password?
+              </router-link>
             </div>
             <button
               type="submit"

@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -42,6 +43,7 @@ export default {
             throw new Error("User creation failed: User object not available.");
 
           commit("SET_USER", response.user);
+          dispatch("sendVerificationEmailToUser");
           return dispatch("updateProfileForCurrentUser", username);
         }
       } catch (error) {
@@ -79,6 +81,14 @@ export default {
       }
     },
 
+    async sendVerificationEmailToUser() {
+      try {
+        await sendEmailVerification(auth.currentUser);
+      } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
     async updateProfileForCurrentUser({ commit, state }, displayName) {
       try {
         const currentUser = state.user;
@@ -96,7 +106,7 @@ export default {
       }
     },
 
-    async resetPassword({ commit }, email) {
+    async sendPasswordResetEmailToUser({ commit }, email) {
       try {
         if (email) {
           await sendPasswordResetEmail(auth, email);

@@ -1,13 +1,26 @@
 <script setup>
+import SuccessMessageCard from "@/components/SuccessMessageCard.vue";
+import ErrorMessageCard from "@/components/ErrorMessageCard.vue";
 import EventCard from "@/components/EventCard.vue";
 import { useStore } from "vuex";
 import { useCurrentUser } from "vuefire";
 import { useRouter } from "vue-router";
+import { computed } from "vue";
 
 const store = useStore();
 const router = useRouter();
 
 const user = useCurrentUser();
+
+const verifyEmailAlertMessage = computed(() =>
+  user.value?.emailVerified === false
+    ? "Please verify your email address in your email inbox or spam."
+    : null
+);
+
+const errorMessage = computed(
+  () => store.state.authentication.authErrorMessage
+);
 
 const handleLogout = async () => {
   const response = await store.dispatch("signOutOfFirebase");
@@ -18,6 +31,8 @@ const handleLogout = async () => {
 </script>
 
 <template>
+  <SuccessMessageCard :message="verifyEmailAlertMessage" />
+  <ErrorMessageCard :message="errorMessage" />
   <div class="container mx-auto min-h-screen p-10">
     <nav class="flex items-center justify-center space-x-5">
       <router-link :to="{ name: 'events' }" class="font-semibold text-md">

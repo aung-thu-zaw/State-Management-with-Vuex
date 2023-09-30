@@ -16,7 +16,7 @@ const resetPasswordErrorMessage = computed(
 );
 
 const handleUserResetPassword = async () => {
-  await store.dispatch("resetPassword", email.value);
+  await store.dispatch("sendPasswordResetEmailToUser", email.value);
 };
 </script>
 

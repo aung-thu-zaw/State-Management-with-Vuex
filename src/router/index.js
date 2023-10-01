@@ -3,10 +3,10 @@ import HomeView from "@/views/HomeView.vue";
 import Register from "@/views/auth/Register.vue";
 import Login from "@/views/auth/Login.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
-import MyAccount from "@/views/MyAccount.vue";
-import Index from "@/views/events/Index.vue";
-import Create from "@/views/events/Create.vue";
-import Edit from "@/views/events/Edit.vue";
+import MyAccount from "@/views/MyAccount/Index.vue";
+import EventList from "@/views/events/Index.vue";
+import EventCreate from "@/views/events/Create.vue";
+import EventEdit from "@/views/events/Edit.vue";
 import { getCurrentUser } from "vuefire";
 
 const router = createRouter({
@@ -70,7 +70,7 @@ const router = createRouter({
     {
       path: "/events",
       name: "events",
-      component: Index,
+      component: EventList,
       async beforeEnter(to, from, next) {
         const user = await getCurrentUser();
 
@@ -81,7 +81,7 @@ const router = createRouter({
     {
       path: "/events/create",
       name: "add-event",
-      component: Create,
+      component: EventCreate,
       async beforeEnter(to, from, next) {
         const user = await getCurrentUser();
 
@@ -92,7 +92,7 @@ const router = createRouter({
     {
       path: "/events/:id/edit",
       name: "edit-event",
-      component: Edit,
+      component: EventEdit,
       props: true,
       async beforeEnter(to, from, next) {
         const user = await getCurrentUser();

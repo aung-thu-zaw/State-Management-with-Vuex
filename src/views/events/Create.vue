@@ -151,9 +151,3 @@ import Navbar from "@/components/Navbar.vue";
 </template>
 
   
-<style scoped>
-a.router-link-active {
-  color: rgb(13, 143, 13);
-  text-decoration: underline;
-}
-</style>

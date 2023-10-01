@@ -7,6 +7,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../../firebase/config.js";
@@ -124,6 +125,34 @@ export default {
         commit("SET_USER", { ...currentUser, displayName });
 
         return currentUser;
+      } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
+    async updateAccountPassword(
+      { commit, dispatch },
+      { currentPassword, newPassword, confirmPassword }
+    ) {
+      try {
+        if (currentPassword && newPassword === confirmPassword) {
+          const response = await dispatch(
+            "userReauthenticate",
+            currentPassword
+          );
+
+          if (!response) throw new Error("Wrong Current Password!");
+
+          await updatePassword(response, newPassword);
+          commit(
+            "SET_AUTH_SUCCESS_MESSAGE",
+            "Your password is updated successfully"
+          );
+
+          return true;
+        } else {
+          throw new Error("Password does not exists");
+        }
       } catch (error) {
         commit("SET_AUTH_ERROR_MESSAGE", error.message);
       }

@@ -1,10 +1,24 @@
 <script setup>
+import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
+import SuccessMessageCard from "@/components/Cards/SuccessMessageCard.vue";
 import InputField from "@/components/Forms/InputField.vue";
 import InputLabel from "@/components/Forms/InputLabel.vue";
 import InputError from "@/components/Forms/InputError.vue";
 import FormButton from "@/components/Forms/FormButton.vue";
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
+import { useStore } from "vuex";
+import { computed } from "vue";
+
+const store = useStore();
+
+const errorMessage = computed(
+  () => store.state.authentication.authErrorMessage
+);
+
+const successMessage = computed(
+  () => store.state.authentication.authSuccessMessage
+);
 
 const validationSchema = yup.object({
   currentPassword: yup.string().required().min(6),
@@ -36,10 +50,20 @@ const handleChangeConfirmPassword = (event) => {
   setFieldValue("confirmPassword", event.target.value);
 };
 
-const submit = handleSubmit(() => console.log("submit"));
+const handleUpdatePassword = async () => {
+  await store.dispatch("updateAccountPassword", {
+    currentPassword: currentPassword.value,
+    newPassword: newPassword.value,
+    confirmPassword: confirmPassword.value,
+  });
+};
+
+const submit = handleSubmit(() => handleUpdatePassword());
 </script>
 
 <template>
+  <SuccessMessageCard :message="successMessage" />
+  <ErrorMessageCard :message="errorMessage" />
   <div>
     <h3 class="text-md font-bold text-slate-600 my-5">
       <i class="fa-solid fa-lock"></i>

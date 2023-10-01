@@ -49,7 +49,6 @@ export default {
           if (!response.user)
             throw new Error("User creation failed: User object not available.");
 
-          commit("SET_USER", response.user);
           dispatch("sendVerificationEmailToUser");
           return dispatch("updateProfileForCurrentUser", username);
         }
@@ -112,9 +111,9 @@ export default {
       }
     },
 
-    async updateProfileForCurrentUser({ commit, state }, displayName) {
+    async updateProfileForCurrentUser({ commit }, displayName) {
       try {
-        const currentUser = state.user;
+        const currentUser = auth.currentUser;
 
         await updateProfile(currentUser, {
           displayName,

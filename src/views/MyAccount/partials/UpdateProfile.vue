@@ -5,15 +5,33 @@ import InputError from "@/components/Forms/InputError.vue";
 import FormButton from "@/components/Forms/FormButton.vue";
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
+import { useStore } from "vuex";
+import { computed } from "vue";
+import { useCurrentUser } from "vuefire";
+
+const store = useStore();
+const user = useCurrentUser();
+
+const errorMessage = computed(
+  () => store.state.authentication.authErrorMessage
+);
+
+const successMessage = computed(
+  () => store.state.authentication.authSuccessMessage
+);
 
 const validationSchema = yup.object({
-  username: yup.string().required(),
-  email: yup.string().required().email(),
+  username: yup.string().nullable(),
+  email: yup.string().nullable().email(),
   photo: yup.string().nullable(),
 });
 
 const { handleSubmit, setFieldValue, errors } = useForm({
   validationSchema,
+  initialValues: {
+    username: user.value?.displayName,
+    email: user.value?.email,
+  },
 });
 
 const { value: username } = useField("username");
@@ -36,19 +54,22 @@ const submit = handleSubmit(() => console.log("submit"));
 </script>
 
 <template>
-  <div>
+  <div class="mt-3">
+    <SuccessMessageCard :message="successMessage" />
+    <ErrorMessageCard :message="errorMessage" />
     <h3 class="text-md font-bold text-slate-600 my-5">
       <i class="fa-solid fa-user"></i>
       Update Profile Information
     </h3>
+
     <form @submit.prevent="submit">
       <div class="grid grid-cols-2 gap-5">
         <div>
-          <InputLabel name="Username" :required="true" />
+          <InputLabel name="Username"  />
 
           <InputField
             type="text"
-            name="name"
+            name="username"
             placeholder="Enter your full name"
             :modelValue="username"
             @change="handleChangeUserName"
@@ -58,7 +79,7 @@ const submit = handleSubmit(() => console.log("submit"));
         </div>
 
         <div>
-          <InputLabel name="Your email" :required="true" />
+          <InputLabel name="Your email"  />
 
           <InputField
             type="email"

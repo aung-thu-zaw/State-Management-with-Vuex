@@ -46,7 +46,7 @@ const submit = handleSubmit(() => handleDeleteAccount());
 </script>
 
 <template>
-  <div>
+  <div class="mt-3">
     <SuccessMessageCard :message="successMessage" />
     <ErrorMessageCard :message="errorMessage" />
     <h3 class="text-md font-bold text-slate-600 my-5">

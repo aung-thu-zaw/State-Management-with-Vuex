@@ -62,9 +62,9 @@ const submit = handleSubmit(() => handleUpdatePassword());
 </script>
 
 <template>
-  <SuccessMessageCard :message="successMessage" />
-  <ErrorMessageCard :message="errorMessage" />
-  <div>
+  <div class="mt-3">
+    <SuccessMessageCard :message="successMessage" />
+    <ErrorMessageCard :message="errorMessage" />
     <h3 class="text-md font-bold text-slate-600 my-5">
       <i class="fa-solid fa-lock"></i>
       Update Password

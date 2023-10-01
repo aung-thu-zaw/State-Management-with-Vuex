@@ -1,5 +1,6 @@
 <script setup>
 import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
+import SuccessMessageCard from "@/components/Cards/SuccessMessageCard.vue";
 import InputField from "@/components/Forms/InputField.vue";
 import InputLabel from "@/components/Forms/InputLabel.vue";
 import InputError from "@/components/Forms/InputError.vue";
@@ -13,8 +14,12 @@ import * as yup from "yup";
 const store = useStore();
 const router = useRouter();
 
-const loginErrorMessage = computed(
+const errorMessage = computed(
   () => store.state.authentication.authErrorMessage
+);
+
+const successMessage = computed(
+  () => store.state.authentication.authSuccessMessage
 );
 
 const validationSchema = yup.object({
@@ -64,8 +69,8 @@ const submit = handleSubmit(() => handleLogin());
           >
             Sign in to your account
           </h1>
-
-          <ErrorMessageCard :message="loginErrorMessage" />
+          <SuccessMessageCard :message="successMessage" />
+          <ErrorMessageCard :message="errorMessage" />
 
           <form @submit.prevent="submit" class="space-y-4 md:space-y-6">
             <div>

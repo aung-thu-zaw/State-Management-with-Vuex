@@ -1,5 +1,8 @@
 import {
+  EmailAuthProvider,
   createUserWithEmailAndPassword,
+  deleteUser,
+  reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -74,6 +77,22 @@ export default {
       }
     },
 
+    async userReauthenticate({ commit }, password) {
+      try {
+        const user = auth.currentUser;
+
+        const credential = EmailAuthProvider.credential(user.email, password);
+
+        const response = await reauthenticateWithCredential(user, credential);
+
+        if (!response) throw new Error("Wrong Password!");
+
+        return response.user;
+      } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
     async signOutOfFirebase({ commit }) {
       try {
         await signOut(auth);
@@ -98,7 +117,8 @@ export default {
 
         await updateProfile(currentUser, {
           displayName,
-          photoURL: "https://example.com/jane-q-user/profile.jpg",
+          photoURL:
+            "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?size=626&ext=jpg",
         });
 
         commit("SET_USER", { ...currentUser, displayName });
@@ -118,6 +138,30 @@ export default {
             "SET_AUTH_SUCCESS_MESSAGE",
             "Password Reset Email has been send. Please check your email inbox or spam."
           );
+        }
+      } catch (error) {
+        commit("SET_AUTH_ERROR_MESSAGE", error.message);
+      }
+    },
+
+    async deleteUserAccount({ commit, dispatch }, password) {
+      try {
+        if (password) {
+          const response = await dispatch("userReauthenticate", password);
+
+          if (!response)
+            throw new Error("Wrong Password : Password does not match !");
+
+          await deleteUser(response);
+
+          commit(
+            "SET_AUTH_SUCCESS_MESSAGE",
+            "Your account is deleted successfully."
+          );
+
+          return true;
+        } else {
+          throw new Error("Password does not exists");
         }
       } catch (error) {
         commit("SET_AUTH_ERROR_MESSAGE", error.message);

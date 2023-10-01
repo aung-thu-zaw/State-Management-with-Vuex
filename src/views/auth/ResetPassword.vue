@@ -12,11 +12,11 @@ import * as yup from "yup";
 
 const store = useStore();
 
-const resetPasswordSuccessMessage = computed(
+const successMessage = computed(
   () => store.state.authentication.authSuccessMessage
 );
 
-const resetPasswordErrorMessage = computed(
+const errorMessage = computed(
   () => store.state.authentication.authErrorMessage
 );
 
@@ -55,8 +55,8 @@ const submit = handleSubmit(() => handleUserResetPassword());
           Reset Your Password
         </h1>
 
-        <SuccessMessageCard :message="resetPasswordSuccessMessage" />
-        <ErrorMessageCard :message="resetPasswordErrorMessage" />
+        <SuccessMessageCard :message="successMessage" />
+        <ErrorMessageCard :message="errorMessage" />
 
         <form
           @submit.prevent="submit"

@@ -1,9 +1,25 @@
 <script setup>
+import ErrorMessageCard from "@/components/Cards/ErrorMessageCard.vue";
+import SuccessMessageCard from "@/components/Cards/SuccessMessageCard.vue";
 import InputField from "@/components/Forms/InputField.vue";
 import InputLabel from "@/components/Forms/InputLabel.vue";
 import InputError from "@/components/Forms/InputError.vue";
+import { useStore } from "vuex";
 import { useForm, useField } from "vee-validate";
 import * as yup from "yup";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+
+const store = useStore();
+const router = useRouter();
+
+const errorMessage = computed(
+  () => store.state.authentication.authErrorMessage
+);
+
+const successMessage = computed(
+  () => store.state.authentication.authSuccessMessage
+);
 
 const validationSchema = yup.object({
   password: yup.string().required().min(6),
@@ -19,11 +35,20 @@ const handleChangePassword = (event) => {
   setFieldValue("password", event.target.value);
 };
 
-const submit = handleSubmit(() => console.log("submit"));
+const handleDeleteAccount = async () => {
+  const response = await store.dispatch("deleteUserAccount", password.value);
+
+  if (response) return router.push({ name: "login" });
+  else false;
+};
+
+const submit = handleSubmit(() => handleDeleteAccount());
 </script>
 
 <template>
   <div>
+    <SuccessMessageCard :message="successMessage" />
+    <ErrorMessageCard :message="errorMessage" />
     <h3 class="text-md font-bold text-slate-600 my-5">
       <i class="fa-solid fa-trash-can"></i>
       Delete Account
